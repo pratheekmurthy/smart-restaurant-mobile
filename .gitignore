@@ -6,3 +6,4 @@ npm-debug.*
 *.key
 *.mobileprovision
 configs/*.js
+yarn.lock
