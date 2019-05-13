@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { StyleSheet, View, AsyncStorage } from "react-native";
 import { Input, Text, Button, Overlay } from "react-native-elements";
-import { login } from "../api/login";
+
+import AppBase from "../base_components/AppBase";
+import PrimaryText from "../base_components/PrimaryText";
+import BR from "../base_components/BR";
+import TextInput from "../base_components/TextInput";
+import RoundButton from "../base_components/RoundButton";
+
+import { login } from "../api/auth";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -71,8 +78,18 @@ class LoginScreen extends Component {
         const token = response.token;
         try {
           const resp = await AsyncStorage.setItem("authToken", token);
-          const setResp = await AsyncStorage.getItem("authToken");
-          this.props.navigation.navigate("Main");
+          const userResp = await AsyncStorage.setItem(
+            "user",
+            JSON.stringify(response.user)
+          );
+          await AsyncStorage.setItem("cartValue", JSON.stringify([]));
+          console.log(response.user);
+          if (response.user.role !== "admin") {
+            // const setResp = await AsyncStorage.getItem("authToken");
+            this.props.navigation.navigate("Main");
+          } else {
+            this.props.navigation.navigate("Admin");
+          }
         } catch (error) {
           this.setState({
             disabled: false,
@@ -81,6 +98,8 @@ class LoginScreen extends Component {
             loginErrorResponse: error.message
           });
         }
+      } else {
+        throw new Error("Something went wrong");
       }
     } catch (error) {
       this.setState({
@@ -94,53 +113,64 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.loginContainer}>
-          <Overlay
-            windowBackgroundColor="rgba(255, 255, 255, .5)"
-            overlayBackgroundColor="red"
-            width="auto"
-            height="auto"
-            isVisible={this.state.loginError}
-            onBackdropPress={() =>
-              this.setState({ loginError: false, loginErrorResponse: "" })
-            }
-          >
-            <Text>{this.state.loginErrorResponse}</Text>
-          </Overlay>
-          <Text h2>Login</Text>
-          <Input
-            autoComplete={false}
-            autoCorrect={false}
-            onChangeText={this.onChangeEmail}
-            value={this.state.email}
-            placeholder="enter e-mail"
-            label="Email"
-            shake={true}
-            errorStyle={styles.errorStyle}
-            errorMessage={this.state.emailErrorMessage}
-          />
-          <Input
-            secureTextEntry={true}
-            autoComplete={false}
-            autoCorrect={false}
-            onChangeText={this.onChangePassword}
-            value={this.state.password}
-            placeholder="enter password"
-            label="Password"
-            shake={true}
-            errorStyle={styles.errorStyle}
-            errorMessage={this.state.passwordErrorMessage}
-          />
-          <Button
-            title="Login"
-            type="outline"
-            onPress={this.onSubmit}
-            disabled={this.state.disabled}
-            loading={this.state.loading}
-          />
-        </View>
-      </View>
+      <AppBase
+        style={{
+          justifyContent: "center"
+        }}
+      >
+        <PrimaryText bold size={26}>
+          Restaurant App
+        </PrimaryText>
+        <BR size={50} />
+        <Overlay
+          windowBackgroundColor="rgba(255, 255, 255, .5)"
+          overlayBackgroundColor="red"
+          width="auto"
+          height="auto"
+          isVisible={this.state.loginError}
+          onBackdropPress={() => {
+            this.setState({ loginError: false, loginErrorResponse: "" });
+          }}
+        >
+          <PrimaryText>{this.state.loginErrorResponse}</PrimaryText>
+        </Overlay>
+        <TextInput
+          autoComplete={false}
+          autoCorrect={false}
+          onChangeText={this.onChangeEmail}
+          value={this.state.email}
+          placeholder="enter e-mail"
+          label="Email"
+          shake={true}
+          errorStyle={styles.errorStyle}
+          errorMessage={this.state.emailErrorMessage}
+        />
+        <BR />
+        <TextInput
+          secureTextEntry={true}
+          autoComplete={false}
+          autoCorrect={false}
+          onChangeText={this.onChangePassword}
+          value={this.state.password}
+          placeholder="enter password"
+          label="Password"
+          shake={true}
+          errorStyle={styles.errorStyle}
+          errorMessage={this.state.passwordErrorMessage}
+        />
+        <RoundButton
+          title="Login"
+          type="outline"
+          onPress={this.onSubmit}
+          disabled={this.state.disabled}
+          loading={this.state.loading}
+        />
+        <RoundButton
+          title="Register"
+          type="outline"
+          onPress={() => this.props.navigation.navigate("Register")}
+        />
+      </AppBase>
     );
   }
 }

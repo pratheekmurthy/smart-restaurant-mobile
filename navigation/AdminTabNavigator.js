@@ -8,7 +8,7 @@ import {
 import MainScreenNavigator from "../navigation/MainScreenNavigator";
 import TabBarIcon from "../components/TabBarIcon";
 // import LinksScreen from "../screens/LinksScreen";
-import OrdersList from "../screens/OrderListScreen";
+import OrdersListScreen from "../screens/admin/ordersListScreen";
 import LogoutScreen from "../screens/LogoutScreen";
 
 const HomeStack = createStackNavigator({
@@ -30,7 +30,7 @@ HomeStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: OrdersList
+  Links: OrdersListScreen
 });
 
 LinksStack.navigationOptions = {
@@ -71,7 +71,7 @@ LogoutStack.navigationOptions = ({ navigation }) => ({
 });
 
 export default createBottomTabNavigator({
-  HomeStack,
+  //   HomeStack,
   LinksStack,
   LogoutStack
 });

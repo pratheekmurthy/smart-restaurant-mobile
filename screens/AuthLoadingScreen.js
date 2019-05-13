@@ -15,12 +15,15 @@ class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
+    // await AsyncStorage.removeItem("authToken");
     const authToken = await AsyncStorage.getItem("authToken");
-
+    const cartValue = await AsyncStorage.getItem("cartValue");
+    console.log(authToken);
+    console.log(cartValue);
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
     //TODO: Change both auth accordingly
-    this.props.navigation.navigate(authToken ? "Auth" : "Auth");
+    this.props.navigation.navigate(authToken && cartValue ? "Home" : "Auth");
   };
 
   // Render any loading content that you like here

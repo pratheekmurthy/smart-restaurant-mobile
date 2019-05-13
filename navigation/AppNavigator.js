@@ -7,6 +7,8 @@ import AuthLoadingScreen from "../screens/AuthLoadingScreen";
 
 import AuthNavigator from "./AuthNavigator";
 
+import AdminTabNavigator from "./AdminTabNavigator";
+
 export default createAppContainer(
   createSwitchNavigator(
     {
@@ -14,7 +16,8 @@ export default createAppContainer(
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
       AuthLoading: AuthLoadingScreen,
       Auth: AuthNavigator,
-      Main: MainTabNavigator
+      Main: MainTabNavigator,
+      Admin: AdminTabNavigator
     },
     {
       initialRouteName: "AuthLoading"
